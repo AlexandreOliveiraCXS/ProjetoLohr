@@ -8,7 +8,7 @@ interface EventInstance extends Model {
   id_Contacts: string,
 }
 
-const GroupContactsModel = connection.define<EventInstance>('Events_Contacts', {
+const GroupContactsModel = connection.define<EventInstance>('Group_Contacts', {
   id_Group: {
     primaryKey: true,
     type: DataTypes.STRING,
