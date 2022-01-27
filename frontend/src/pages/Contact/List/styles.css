@@ -1,0 +1,55 @@
+.Conteiner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    background-color: blue;
+    height: 100vh;
+}
+
+.plusContact {
+    width: 50vh;
+    display: flex !important;
+    align-items: center;
+    justify-content: end;
+
+    color: var(--white);
+
+}
+
+.plusContact :hover {
+    color: var(--yellow-500);
+}
+
+.Content {
+
+    width: 50vh;
+}
+
+.LineContent {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    margin: .2vh;
+    border-radius: 2px;
+}
+
+.LineContentNav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 5vh;
+    height: 3vh;
+}
+
+.Button {
+    display: flex;
+    align-items: center;
+
+    background-color: var(--white);
+}
+
+.Button:hover {
+    color: var(--yellow-500);
+}
