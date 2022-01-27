@@ -1,2 +1,2 @@
 # ProjetoLohr
-Projeto com finalidade avalhativa Lohr
+Projeto com finalidade avaliativa Lohr
