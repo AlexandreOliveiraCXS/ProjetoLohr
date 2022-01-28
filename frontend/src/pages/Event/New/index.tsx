@@ -1,57 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles.css";
 import { Form, Button } from 'react-bootstrap';
 import api from "../../../services/api";
 import { useNavigate } from "react-router";
+import DatePicker from "react-date-picker";
 
-interface iContacts {
+interface iEvents {
   id?: string,
-  email: string,
   name: string,
-  cel_phone: string,
+  appointment: Date
 }
 
 function New() {
+  const [date, setDate] = useState(new Date());
   const navigate = useNavigate();
+  const hours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
-      email: { value: string };
       name: { value: string };
-      cel_phone: { value: string };
+      hour: { value: number };
     };
-    const email = target.email.value; // typechecks!
-    const name = target.name.value; // typechecks!
-    const cel_phone = target.cel_phone.value; // typechecks!
+    const hour = target.hour.value; // typechecks!
+    const name = target.name.value; // typechecks!   
+    const dataEvent = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour);
 
-    const contactEdited: iContacts = {
-      email, name, cel_phone
+    const eventsEdited: iEvents = {
+      name, appointment: dataEvent
     }
+    console.log(eventsEdited)
 
-    api.post('contact/new', contactEdited).then((res) => {
-      navigate(`/contact/`);
+    api.post('event/new', eventsEdited).then((res) => {
+      navigate(`/event/`);
     });
   }
+
+
 
   return (
     <div className="Conteiner">
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Nome Completo</Form.Label>
-          <Form.Control type="name" name="name" placeholder="Nome Completo" />
+          <Form.Label>Nome do Evento</Form.Label>
+          <Form.Control type="name" name="name" placeholder="Nome do Evento" />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email</Form.Label>
-          <Form.Control type="email" name="email" placeholder="Enter email" />
-        </Form.Group>
+        <DatePicker value={date} format={"dd/MM/y"} onChange={setDate} />
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Telefone Celular</Form.Label>
-          <Form.Control type="cel_phone" name="cel_phone" placeholder="cel_phone" />
+          <Form.Select aria-label="Default select example" name="hour">
+            <option>Hora do Evento</option>
+            {hours.map((hour) => (
+              <option key={hour} value={hour}>{hour}</option>
+            ))}
+          </Form.Select>
         </Form.Group>
-
 
         <Button variant="primary" type="submit">
           Cadastrar

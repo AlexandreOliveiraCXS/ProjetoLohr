@@ -2,6 +2,9 @@ import { Router, Request, Response } from 'express';
 import ContactsModel from '../../database/models/contacts';
 import EventModel from '../../database/models/event';
 import EventContactsModel from '../../database/models/eventContacts';
+import { QueryTypes } from 'sequelize';
+import sequelize from '../../database';
+
 
 const eventContactRouter = Router();
 
@@ -39,13 +42,35 @@ eventContactRouter.get('/', async (req: Request, res: Response) => {
         }]
     });
 
-    return res.status(201).json(eventContactsFind);
+    return res.status(201).json(eventContactsFind[0]);
+});
+
+eventContactRouter.get('/notContact', async (req: Request, res: Response) => {
+    const { id }: iEventContact = req.query;
+
+    const eventFind = await EventModel.findOne({
+        where: { id }
+    });
+
+    if (!eventFind)
+        return res.status(200).json({
+            status: 401,
+            message: "Event not Found"
+        });
+
+    var query = `select * from \"Contacts\" c `
+        + `where id not in (select \"id_Contacts\" `
+        + `from \"Event_Contacts\" ec `
+        + `where ec.\"id_Event\" = '${id}')`;
+    const users = await sequelize.query(query, { type: QueryTypes.SELECT });
+
+    return res.status(201).json(users);
 });
 
 eventContactRouter.post('/addContacts', async (req: Request, res: Response) => {
     const { contacts }: iEventContact = req.body;
     const { id }: iEventContact = req.query;
-
+    console.log(req.body)
     const eventFind = await EventModel.findOne({
         where: { id }
     });

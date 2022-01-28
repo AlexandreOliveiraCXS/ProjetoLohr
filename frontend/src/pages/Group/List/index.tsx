@@ -35,6 +35,10 @@ function List() {
     });
   };
 
+  const handleDetail = (id: string) => {
+    navigate(`/group/detail/${id}`);
+  };
+
   return (
     <>
       <div className="Conteiner">
@@ -43,7 +47,7 @@ function List() {
         </div>
         <ListGroup className="Content">
           {groups && groups.map((group) => (
-            <ListGroup.Item action className="LineContent" key={group.id}>
+            <ListGroup.Item action className="LineContent" key={group.id} onClick={() => { handleDetail(group.id) }}>
               {group.name}
               <nav className="LineContentNav">
                 <BsFillPencilFill className="Button" onClick={() => { handleClick(group) }} />

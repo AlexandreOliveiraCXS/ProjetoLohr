@@ -1,12 +1,3 @@
-.Conteiner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-
-    background-color: blue;
-    height: 100vh;
-}
 
 .PlusGroup {
     width: 50vh;

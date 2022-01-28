@@ -2,6 +2,8 @@ import { Router, Request, Response } from 'express';
 import ContactsModel from '../../database/models/contacts';
 import GroupContactsModel from '../../database/models/groupContacts';
 import GroupModel from '../../database/models/groups';
+import { QueryTypes } from 'sequelize';
+import sequelize from '../../database';
 
 const groupContactRouter = Router();
 
@@ -38,7 +40,29 @@ groupContactRouter.get('/', async (req: Request, res: Response) => {
         }]
     });
 
-    return res.status(201).json(groupContactsFind);
+    return res.status(201).json(groupContactsFind[0]);
+});
+
+groupContactRouter.get('/notContact', async (req: Request, res: Response) => {
+    const { id }: iGroupContact = req.query;
+
+    const groupFind = await GroupModel.findOne({
+        where: { id }
+    });
+
+    if (!groupFind)
+        return res.status(200).json({
+            status: 401,
+            message: "Group not Found"
+        });
+
+    var query = `select * from \"Contacts\" c `
+        + `where id not in (select \"id_Contacts\" `
+        + `from \"Group_Contacts\" gc `
+        + `where gc.\"id_Group\" = '${id}')`;
+    const users = await sequelize.query(query, { type: QueryTypes.SELECT });
+
+    return res.status(201).json(users);
 });
 
 groupContactRouter.post('/addContacts', async (req: Request, res: Response) => {

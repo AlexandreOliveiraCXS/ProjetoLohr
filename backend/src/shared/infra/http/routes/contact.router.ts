@@ -45,7 +45,7 @@ contactRouter.post('/new', async (req: Request, res: Response) => {
 contactRouter.put('/edit', async (req: Request, res: Response) => {
     const { name, cel_phone, email }: iContact = req.body;
     const { id }: iContact = req.query;
-console.log(req)      
+
     const [fristName, lastName] = name.split(' ');
 
     const contactFind = await ContactsModel.findOne({

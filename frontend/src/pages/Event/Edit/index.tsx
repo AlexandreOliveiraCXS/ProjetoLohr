@@ -1,79 +1,86 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 import { Form, Button } from 'react-bootstrap';
-import { useNavigate, useLocation } from "react-router-dom";
 import api from "../../../services/api";
+import { useLocation, useNavigate } from "react-router";
+import DatePicker from "react-date-picker";
 
-interface iContacts {
-  id: string,
+interface iEvents {
+  id?: string,
   name: string,
-  email: string,
-  last_Name: string,
-  cel_Phone: string,
+  appointment: Date
 }
 
-function Edit() {
-  const [contact, setContact] = useState<iContacts>();
+function New() {
+  const [date, setDate] = useState(new Date());
+  const [initialHour, setInitialHour] = useState<number>();
   const navigate = useNavigate();
+  const hours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+
+  const [event, setEvent] = useState<iEvents>();
   const location = useLocation();
 
   useEffect(() => {
-    const id = location.pathname.replace('/contact/edit/', '');
+    const id = location.pathname.replace('/event/edit/', '');
 
-    api.get('contact/', { params: { id } }).then((res) => {
-      setContact(res.data);
+    api.get('event/', { params: { id } }).then((res) => {
+      const { appointment, name, id }: iEvents = res.data;
+      setEvent({ appointment, name, id });
+
+      const dateResponse = new Date(appointment);
+      setDate(dateResponse);
+
+      setInitialHour(dateResponse.getHours());
     });
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
-      email: { value: string };
       name: { value: string };
-      cel_phone: { value: string };
+      hour: { value: number };
     };
-    const email = target.email.value; // typechecks!
-    const name = target.name.value; // typechecks!
-    const cel_phone = target.cel_phone.value; // typechecks!
+    const hour = target.hour.value; // typechecks!
+    const name = target.name.value; // typechecks!   
+    const dataEvent = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour);
 
-    const contactEdited = {
-      email, name, cel_phone
+    const eventsEdited: iEvents = {
+      name, appointment: dataEvent
     }
 
-    api.put('contact/edit', contactEdited, { params: { id: contact?.id } }).then((res) => {
-      navigate(`/contact/`);
+    api.put('event/edit', eventsEdited, { params: { id: event?.id } }).then((res) => {
+      navigate(`/event/`);
     });
   }
 
   return (
     <div className="Conteiner">
-      {contact && (
+      {event && (
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Nome Completo</Form.Label>
-            <Form.Control defaultValue={`${contact.name} ${contact.last_Name}`} type="name" name="name" placeholder="Nome Completo" />
+            <Form.Label>Nome do Evento</Form.Label>
+            <Form.Control defaultValue={event.name} type="name" name="name" placeholder="Nome do Evento" />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email</Form.Label>
-            <Form.Control defaultValue={contact.email} type="email" name="email" placeholder="Enter email" />
-          </Form.Group>
+          <DatePicker value={date} format={"dd/MM/y"} onChange={setDate} />
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Telefone Celular</Form.Label>
-            <Form.Control defaultValue={contact.cel_Phone} type="cel_phone" name="cel_phone" placeholder="cel_phone" />
+            <Form.Select aria-label="Default select example" name="hour">
+              <option>Hora do Evento</option>
+              {hours.map((hour) => (
+                <option key={hour} value={hour} selected={hour === initialHour}>{hour}</option>
+              ))}
+            </Form.Select>
           </Form.Group>
-
 
           <Button variant="primary" type="submit">
             Cadastrar
           </Button>
         </Form>
       )}
-
     </div >
 
   );
 }
 
-export default Edit;
+export default New;

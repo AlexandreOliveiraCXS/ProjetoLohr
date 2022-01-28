@@ -1,11 +1,6 @@
-.Conteiner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.Conteiner{
+    display: flex !important;
     flex-direction: column;
-
-    background-color: blue;
-    height: 100vh;
 }
 
 .plusContact {

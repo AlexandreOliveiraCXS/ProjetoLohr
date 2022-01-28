@@ -1,0 +1,62 @@
+.Content{
+}
+
+.Icons {
+    display: flex !important;
+    align-items: center;
+    justify-content: end;
+    margin-right: 6rem;
+    color: var(--white);
+
+}
+
+.Icons :hover {
+    color: var(--yellow-500);
+}
+
+.Titule {
+    display: flex !important;
+    align-items: center;
+    justify-content: start;
+    font-size: 1.5rem;
+
+    color: var(--white);
+}
+
+.TituleInfo {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+
+    color: var(--white);
+}
+
+.SubTitule {
+    display: flex !important;
+    align-items: center;
+    justify-content: start;
+    font-size: 1.4rem;
+
+    color: var(--white);
+}
+
+.ContactInfo {
+    background-color: var(--gray-900);
+    margin: 2px;
+    padding: 2px;
+    border-radius: 8px;
+    
+}
+.ContactInfo:hover {
+    background-color: var(--yellow-800);
+}
+
+.Name {
+    display: flex !important;
+    align-items: center;
+    justify-content: start;
+
+    color: var(--white);
+
+}
