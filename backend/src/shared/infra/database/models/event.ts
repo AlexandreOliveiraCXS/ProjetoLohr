@@ -4,6 +4,7 @@ import connection from '../index';
 interface EventInstance extends Model {
   id: number;
   name: string,
+  appointment: Date;
 }
 const EventModel = connection.define<EventInstance>('Events', {
   id: {

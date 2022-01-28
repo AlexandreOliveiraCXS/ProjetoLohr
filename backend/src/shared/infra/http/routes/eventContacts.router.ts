@@ -4,6 +4,7 @@ import EventModel from '../../database/models/event';
 import EventContactsModel from '../../database/models/eventContacts';
 import { QueryTypes } from 'sequelize';
 import sequelize from '../../database';
+import sendEmail from '../../../useful/sendMail';
 
 
 const eventContactRouter = Router();
@@ -70,7 +71,7 @@ eventContactRouter.get('/notContact', async (req: Request, res: Response) => {
 eventContactRouter.post('/addContacts', async (req: Request, res: Response) => {
     const { contacts }: iEventContact = req.body;
     const { id }: iEventContact = req.query;
-    console.log(req.body)
+
     const eventFind = await EventModel.findOne({
         where: { id }
     });
@@ -89,6 +90,17 @@ eventContactRouter.post('/addContacts', async (req: Request, res: Response) => {
             id_Contacts: contact,
         };
 
+        const contactFind = await ContactsModel.findOne({
+            where: { id: model.id_Contacts }
+        });
+
+        if (!contactFind)
+            return res.status(200).json({
+                status: 401,
+                message: "Contact not Found"
+            });
+
+
         const contactEvent = await EventContactsModel.findOne({ where: model });
         if (!!contactEvent) {
             controler++;
@@ -98,6 +110,12 @@ eventContactRouter.post('/addContacts', async (req: Request, res: Response) => {
         const response = await EventContactsModel.create(model);
         if (!!response) {
             controler++;
+            const paramsMail = {
+                addressee: `${contactFind.email}`,
+                subject: "Convite para participar de um evento",
+                message: `Prabéns você foi convidade para participar do evento ${eventFind.name} na data ${eventFind.appointment}`,
+            };
+            sendEmail(paramsMail);
             return;
         }
 

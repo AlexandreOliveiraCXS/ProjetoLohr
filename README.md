@@ -15,6 +15,8 @@ Backend
     yarn add dotenv
     yarn add uuid
     yarn add @types/uuid -D
+    yarn add nodemailer
+    yarn add @types/nodemailer -D
 Front
     nxp create react-app my-app --template typescript
     yarn add bootstrap
