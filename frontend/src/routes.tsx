@@ -14,11 +14,14 @@ import ListEvent from './pages/Event/List';
 import EditEvent from './pages/Event/Edit';
 import NewEvent from './pages/Event/New';
 import DetailEvent from './pages/Event/Details';
+import Home from './pages/Home';
 
 const RoutesCustomer = () => {
     return (
         <BrowserRouter>
             <Routes>
+                <Route element={<Home />} path="/" />
+
                 <Route element={<ListContact />} path="/contact" />
                 <Route element={<EditContact />} path="/contact/edit/:id" />
                 <Route element={<NewContact />} path="/contact/new" />
